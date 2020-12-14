@@ -22,14 +22,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.walterrezende.guessit.R
 import com.walterrezende.guessit.databinding.GameFragmentBinding
+import timber.log.Timber
 
 /**
  * Fragment where the game is played
  */
 class GameFragment : Fragment() {
+
+    private lateinit var viewModel: GameViewModel
 
     // The current word
     private var word = ""
@@ -43,7 +47,7 @@ class GameFragment : Fragment() {
     private lateinit var binding: GameFragmentBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
 
         // Inflate view and obtain an instance of the binding class
         binding = DataBindingUtil.inflate(
@@ -52,6 +56,9 @@ class GameFragment : Fragment() {
                 container,
                 false
         )
+
+        Timber.i("Called ViewModelProvider")
+        ViewModelProvider(this).get(GameViewModel::class.java)
 
         resetList()
         nextWord()

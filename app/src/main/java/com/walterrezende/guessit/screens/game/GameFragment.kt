@@ -52,6 +52,8 @@ class GameFragment : Fragment() {
 
         Timber.i("Called ViewModelProvider")
         viewModel = ViewModelProvider(this).get(GameViewModel::class.java)
+        binding.lifecycleOwner = this
+        binding.viewmodel = viewModel
 
         setOnClickListeners()
         setObservers()
@@ -61,29 +63,18 @@ class GameFragment : Fragment() {
     }
 
     private fun setObservers() {
-        viewModel.apply {
-            score.observe(requireActivity()) { updateScore(it) }
-            word.observe(requireActivity()) { updateWord(it) }
+        viewModel.eventGameFinished.observe(requireActivity()) { hasFinished ->
+            if (hasFinished) {
+                gameFinished()
+                viewModel.onGameFinishComplete()
+            }
         }
-    }
-
-    private fun updateScore(newScore: Int) {
-        binding.scoreText.text = newScore.toString()
-    }
-
-    private fun updateWord(newWord: String?) {
-        binding.wordText.text = newWord
     }
 
     private fun setOnClickListeners() {
         binding.apply {
-            correctButton.setOnClickListener {
-                viewModel.onCorrect()
-            }
-
-            skipButton.setOnClickListener {
-                viewModel.onSkip()
-            }
+            correctButton.setOnClickListener { viewModel.onCorrect() }
+            skipButton.setOnClickListener { viewModel.onSkip() }
         }
     }
 

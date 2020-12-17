@@ -22,6 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.walterrezende.guessit.R
@@ -36,6 +37,8 @@ class GameFragment : Fragment() {
     private lateinit var viewModel: GameViewModel
 
     private lateinit var binding: GameFragmentBinding
+
+    private val gameFinished by lazy { Observer<Boolean> { onGameFinish(it) } }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,20 +59,35 @@ class GameFragment : Fragment() {
         binding.viewmodel = viewModel
 
         setOnClickListeners()
-        setObservers()
 
         return binding.root
-
     }
 
-    private fun setObservers() {
-        viewModel.eventGameFinished.observe(requireActivity()) { hasFinished ->
-            if (hasFinished) {
-                gameFinished()
-                viewModel.onGameFinishComplete()
-            }
+    override fun onStart() {
+        super.onStart()
+        addObservers()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        removeObservers()
+    }
+
+    private fun addObservers() {
+        viewModel.eventGameFinished.observe(this, gameFinished)
+    }
+
+    private fun removeObservers() {
+        viewModel.eventGameFinished.removeObserver(gameFinished)
+    }
+
+    private fun onGameFinish(hasFinished: Boolean) {
+        if (hasFinished) {
+            gameFinished()
+            viewModel.onGameFinishComplete()
         }
     }
+
 
     private fun setOnClickListeners() {
         binding.apply {

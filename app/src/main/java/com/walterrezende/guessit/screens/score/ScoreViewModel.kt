@@ -3,10 +3,9 @@ package com.walterrezende.guessit.screens.score
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import timber.log.Timber
 
 class ScoreViewModel(
-    private var finalScore: Int
+    finalScore: Int
 ) : ViewModel() {
 
     private val _score = MutableLiveData<Int>()

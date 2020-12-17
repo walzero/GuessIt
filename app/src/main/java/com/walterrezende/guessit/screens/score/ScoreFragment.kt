@@ -37,6 +37,8 @@ class ScoreFragment : Fragment() {
     private lateinit var viewModel: ScoreViewModel
     private lateinit var viewModelFactory: ScoreViewModelFactory
 
+    private val playAgainObserver by lazy { Observer<Boolean> { onPlayAgain(it) } }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -55,18 +57,38 @@ class ScoreFragment : Fragment() {
         val scoreFragmentArgs by navArgs<ScoreFragmentArgs>()
 
         viewModelFactory = ScoreViewModelFactory(scoreFragmentArgs.score)
-        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
             .get(ScoreViewModel::class.java)
 
+        binding.viewmodel = viewModel
+        binding.lifecycleOwner = this
         binding.playAgainButton.setOnClickListener { viewModel.onPlayAgain() }
 
-        viewModel.eventPlayAgain.observe(requireActivity(), Observer { playAgain ->
-            if (playAgain) {
-                findNavController().navigate(ScoreFragmentDirections.actionRestart())
-                viewModel.onPlayAgainComplete()
-            }
-        })
-
         return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        addObservers()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        removeObservers()
+    }
+
+    private fun addObservers() {
+        viewModel.eventPlayAgain.observe(this, playAgainObserver)
+    }
+
+    private fun removeObservers() {
+        viewModel.eventPlayAgain.removeObserver(playAgainObserver)
+    }
+
+    private fun onPlayAgain(playAgain: Boolean) {
+        if (playAgain) {
+            findNavController().navigate(ScoreFragmentDirections.actionRestart())
+            viewModel.onPlayAgainComplete()
+        }
     }
 }

@@ -19,8 +19,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
-            name="viewmodel"
+            name="scoreViewModel"
             type="com.walterrezende.guessit.screens.score.ScoreViewModel" />
     </data>
 
@@ -54,10 +55,10 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="8dp"
             android:fontFamily="sans-serif"
+            android:text="@{scoreViewModel.score.toString()}"
             android:textColor="@color/black_text_color"
             android:textSize="34sp"
             android:textStyle="normal"
-            android:text="@{viewmodel.score.toString()}"
             app:layout_constraintBottom_toTopOf="@+id/play_again_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -71,6 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
+            android:onClick="@{() -> scoreViewModel.onPlayAgain()}"
             android:text="@string/play_again"
             android:theme="@style/GoButton"
             app:layout_constraintBottom_toBottomOf="parent"

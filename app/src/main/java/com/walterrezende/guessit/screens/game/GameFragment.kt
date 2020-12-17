@@ -56,9 +56,7 @@ class GameFragment : Fragment() {
         Timber.i("Called ViewModelProvider")
         viewModel = ViewModelProvider(this).get(GameViewModel::class.java)
         binding.lifecycleOwner = this
-        binding.viewmodel = viewModel
-
-        setOnClickListeners()
+        binding.gameViewModel = viewModel
 
         return binding.root
     }
@@ -85,14 +83,6 @@ class GameFragment : Fragment() {
         if (hasFinished) {
             gameFinished()
             viewModel.onGameFinishComplete()
-        }
-    }
-
-
-    private fun setOnClickListeners() {
-        binding.apply {
-            correctButton.setOnClickListener { viewModel.onCorrect() }
-            skipButton.setOnClickListener { viewModel.onSkip() }
         }
     }
 

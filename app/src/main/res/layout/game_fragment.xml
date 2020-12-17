@@ -21,7 +21,7 @@
     <data>
 
         <variable
-            name="viewmodel"
+            name="gameViewModel"
             type="com.walterrezende.guessit.screens.game.GameViewModel" />
     </data>
 
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
             android:fontFamily="sans-serif"
-            android:text="@{viewmodel.word}"
+            android:text="@{gameViewModel.word}"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:textColor="@color/black_text_color"
             android:textSize="34sp"
@@ -75,7 +75,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:fontFamily="sans-serif"
-            android:text="@{viewmodel.time}"
+            android:text="@{gameViewModel.time}"
             android:textColor="@color/grey_text_color"
             android:textSize="14sp"
             android:textStyle="normal"
@@ -91,7 +91,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:fontFamily="sans-serif"
-            android:text="@{viewmodel.score.toString()}"
+            android:text="@{gameViewModel.score.toString()}"
             android:textColor="@color/grey_text_color"
             android:textSize="14sp"
             android:textStyle="normal"
@@ -105,6 +105,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:onClick="@{() -> gameViewModel.onSkip()}"
             android:text="@string/skip"
             android:theme="@style/SkipButton"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -126,6 +127,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
+            android:onClick="@{() -> gameViewModel.onCorrect()}"
             android:text="@string/got_it"
             android:theme="@style/GoButton"
             app:layout_constraintBottom_toBottomOf="parent"

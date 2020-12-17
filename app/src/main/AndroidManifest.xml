@@ -18,6 +18,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.walterrezende.guessit">
 
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:name=".screens.GuessItApplication"
         android:allowBackup="true"
@@ -31,7 +33,10 @@
         <!-- Screen locked to landscape for easier play -->
         <!-- configChanges attribute makes the following actions NOT cause a config change  -->
         <!-- screenOrientation attribute sets the default animation-->
-        <activity android:name="com.walterrezende.guessit.MainActivity">
+        <activity
+            android:name="com.walterrezende.guessit.MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="landscape">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

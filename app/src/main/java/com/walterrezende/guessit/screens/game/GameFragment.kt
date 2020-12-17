@@ -16,10 +16,14 @@
 
 package com.walterrezende.guessit.screens.game
 
+import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.getSystemService
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -39,6 +43,7 @@ class GameFragment : Fragment() {
     private lateinit var binding: GameFragmentBinding
 
     private val gameFinished by lazy { Observer<Boolean> { onGameFinish(it) } }
+    private val buzzChanged by lazy { Observer<BuzzType> { onBuzz(it) } }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -73,10 +78,12 @@ class GameFragment : Fragment() {
 
     private fun addObservers() {
         viewModel.eventGameFinished.observe(this, gameFinished)
+        viewModel.buzz.observe(this, buzzChanged)
     }
 
     private fun removeObservers() {
         viewModel.eventGameFinished.removeObserver(gameFinished)
+        viewModel.buzz.removeObserver(buzzChanged)
     }
 
     private fun onGameFinish(hasFinished: Boolean) {
@@ -92,5 +99,26 @@ class GameFragment : Fragment() {
     private fun gameFinished() {
         val action = GameFragmentDirections.actionGameToScore(viewModel.score.value ?: 0)
         findNavController(this).navigate(action)
+    }
+
+    private fun onBuzz(buzzType: BuzzType?) {
+        buzzType?.let {
+            buzz(it.pattern)
+        }
+
+        viewModel.onBuzzComplete()
+    }
+
+    private fun buzz(pattern: LongArray) {
+        val buzzer = requireActivity().getSystemService<Vibrator>()
+
+        buzzer?.let {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                buzzer.vibrate(VibrationEffect.createWaveform(pattern, -1))
+            } else {
+                //deprecated in API 26
+                buzzer.vibrate(pattern, -1)
+            }
+        }
     }
 }

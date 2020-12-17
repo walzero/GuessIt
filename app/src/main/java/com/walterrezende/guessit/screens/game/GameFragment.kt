@@ -102,11 +102,10 @@ class GameFragment : Fragment() {
     }
 
     private fun onBuzz(buzzType: BuzzType?) {
-        buzzType?.let {
+        buzzType?.takeUnless { it == BuzzType.NO_BUZZ }?.let {
             buzz(it.pattern)
+            viewModel.onBuzzComplete()
         }
-
-        viewModel.onBuzzComplete()
     }
 
     private fun buzz(pattern: LongArray) {
@@ -114,10 +113,10 @@ class GameFragment : Fragment() {
 
         buzzer?.let {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                buzzer.vibrate(VibrationEffect.createWaveform(pattern, -1))
+                it.vibrate(VibrationEffect.createWaveform(pattern, 0))
             } else {
                 //deprecated in API 26
-                buzzer.vibrate(pattern, -1)
+                it.vibrate(pattern, 0)
             }
         }
     }

@@ -113,10 +113,10 @@ class GameFragment : Fragment() {
 
         buzzer?.let {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                it.vibrate(VibrationEffect.createWaveform(pattern, 0))
+                it.vibrate(VibrationEffect.createWaveform(pattern, -1))
             } else {
                 //deprecated in API 26
-                it.vibrate(pattern, 0)
+                it.vibrate(pattern, -1)
             }
         }
     }
